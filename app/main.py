@@ -15,7 +15,7 @@ from .routers import post, user, auth
 from .config import settings
 
 from fastapi.templating import Jinja2Templates
-temp_obj = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="htmldirectory")
 
 models.Base.metadata.create_all(bind=engine) #this command creates all our tables
 #checks if the tables mentioned in the models.py are already there in database, if they are there then this command doesnt do anything
@@ -38,7 +38,7 @@ app.include_router(auth.router)
 async def root(request:Request): #async is for if you want to run the function asynchronously.
 # async functions are used when function will take large amount of computer power and time
 # async keyword is optional
-    return temp_obj.TemplateResponse("index.html",{"request":request})
+    return templates.TemplateResponse("file1.html",{"request":request})
     #converts the message into json format and returns to frontend
 
 
