@@ -1,6 +1,6 @@
 from os import stat
 from typing import Optional, List
-from fastapi import FastAPI, Response, status, HTTPException, Depends
+from fastapi import FastAPI, Response, status, HTTPException, Depends, Request
 from fastapi.params import Body
 from pydantic import BaseModel
 import random
@@ -14,6 +14,8 @@ from sqlalchemy.orm import Session
 from .routers import post, user, auth
 from .config import settings
 
+from fastapi.templating import Jinja2Templates
+temp_obj = Jinja2Templates(directory="templates")
 
 models.Base.metadata.create_all(bind=engine) #this command creates all our tables
 #checks if the tables mentioned in the models.py are already there in database, if they are there then this command doesnt do anything
@@ -33,10 +35,10 @@ app.include_router(auth.router)
 # get keyword used to perform a get request (http method)
 # This '@app' has nothing to do with web app instance 'app', both are different
 # '/' is the path
-async def root(): #async is for if you want to run the function asynchronously.
+async def root(request:Request): #async is for if you want to run the function asynchronously.
 # async functions are used when function will take large amount of computer power and time
 # async keyword is optional
-    return {'message' : 'Hello world'}
+    return temp_obj.TemplateResponse("index.html",{"request":request})
     #converts the message into json format and returns to frontend
 
 
