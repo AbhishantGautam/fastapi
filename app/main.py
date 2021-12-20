@@ -13,9 +13,15 @@ from .database import engine, get_db
 from sqlalchemy.orm import Session
 from .routers import post, user, auth
 from .config import settings
-
+from fastapi.responses import HTMLResponse
+import pathlib
 from fastapi.templating import Jinja2Templates
-templates = Jinja2Templates(directory="htmldirectory")
+
+BASE_DIR = pathlib.Path(__file__).parent
+
+templates = Jinja2Templates(directory=str(BASE_DIR/"templates"))
+
+
 
 models.Base.metadata.create_all(bind=engine) #this command creates all our tables
 #checks if the tables mentioned in the models.py are already there in database, if they are there then this command doesnt do anything
@@ -31,14 +37,14 @@ app.include_router(auth.router)
 
 
 #path operation
-@app.get('/') #decorator that converts a plain function into a path function or route
+@app.get('/', response_class=HTMLResponse) #decorator that converts a plain function into a path function or route
 # get keyword used to perform a get request (http method)
 # This '@app' has nothing to do with web app instance 'app', both are different
 # '/' is the path
 async def root(request:Request): #async is for if you want to run the function asynchronously.
 # async functions are used when function will take large amount of computer power and time
 # async keyword is optional
-    return templates.TemplateResponse("file1.html",{"request":request})
+    return templates.TemplateResponse("file1.html", {"request":request})
     #converts the message into json format and returns to frontend
 
 
